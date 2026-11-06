@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: qvb
+Version: 0.1.0
+Requires-Python: >=3.11
+Requires-Dist: obspy
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+Requires-Dist: requests
+Requires-Dist: pyarrow
+Requires-Dist: duckdb
+Requires-Dist: scikit-learn
+Requires-Dist: joblib
+Requires-Dist: plotly
+Requires-Dist: streamlit
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: dbt-duckdb; extra == "dev"

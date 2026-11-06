@@ -1,0 +1,16 @@
+obspy
+numpy
+scipy
+pandas
+matplotlib
+requests
+pyarrow
+duckdb
+scikit-learn
+joblib
+plotly
+streamlit
+
+[dev]
+pytest
+dbt-duckdb
