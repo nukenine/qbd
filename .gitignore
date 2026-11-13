@@ -6,3 +6,4 @@ data/
 models/
 qvb_dbt/target/
 qvb_dbt/logs/
+.idea/
