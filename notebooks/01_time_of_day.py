@@ -12,12 +12,12 @@ catalog = pd.read_parquet(ROOT / "data" / "catalog.parquet")
 
 counts = (
     catalog.groupby(["local_hour", "type"])
-    .size()
-    .unstack(fill_value=0)
-    .reindex(range(24), fill_value=0)
+    .size() #pd Series, rows per local_hour/type, i.e. # of each type at each hour
+    .unstack(fill_value=0) #a matrix w/ any NaNs to 0's; like a source of a pivot table for example
+    .reindex(range(24), fill_value=0) #ensures 0-23 hr index
 )
 
-share = counts / counts.sum()
+share = counts / counts.sum() #`counts.sum()` sums each col; so this is value of row div. by total col
 
 # plotting
 ax = share.plot(kind="bar",

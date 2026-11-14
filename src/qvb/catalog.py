@@ -8,10 +8,11 @@ from pathlib import Path
 import pandas as pd
 import requests
 
+from qvb.paths import DATA, WAVES
+
 USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
 NORTHEAST = dict(minlatitude=40.0, maxlatitude=47.5,
                  minlongitude=-80.0, maxlongitude=-66.5)
-DATA = Path("data")
 TIME_ZONE = "America/New_York"
 
 
