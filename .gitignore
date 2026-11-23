@@ -9,3 +9,4 @@ qvb_dbt/logs/
 .idea/
 *.mseed
 *.egg-info
+docs/training/
