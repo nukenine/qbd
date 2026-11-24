@@ -14,12 +14,13 @@ def get_inventory() -> tuple[Inventory, Inventory]:  # shouldn't the networks be
     Returns obspy Inventory for IRIS DMC and Raspberry Shake network
     """
 
-    iris = Client("IRIS").get_stations(network="NE,LD,US,N4",
-                                       channel="HHZ,BHZ",
+    # Client("IRIS") deprecated since IRIS-->EarthScope
+    iris = Client("EARTHSCOPE").get_stations(network="NE,LD,US,N4", #TODO: this shouldn't be hardwired?
+                                       channel="HHZ,BHZ", #TODO: same, shouldnt be hardwired?
                                        level="response",
-                                       **NORTHEAST)
+                                       **NORTHEAST) #TODO: def shouldn't be hardwired?
 
-    shake = Client("RASPISHAKE").get_stations(network="AM",
+    shake = Client("RASPISHAKE", timeout=180).get_stations(network="AM",
                                               channel="EHZ",
                                               level="response",
                                               **NORTHEAST)
@@ -45,7 +46,7 @@ def to_table(inv: Inventory, source: str) -> pd.DataFrame:
     return pd.DataFrame(rows).drop_duplicates(["network", "station"])
 
 
-def nearest_stations(stations, lat, lon, max_km=150, n=4):
+def nearest_stations(stations, lat, lon, max_km=150, n=10):
     # axis=1 is over rows, axis=0 would be over columns; convert to km; `dist` a pd.Series!
     dist = stations.apply(lambda r: gps2dist_azimuth(lat, lon, r.latitude, r.longitude)[0] / 1000, axis=1)
 
@@ -53,12 +54,11 @@ def nearest_stations(stations, lat, lon, max_km=150, n=4):
     return stations.assign(dist_km=dist).query("dist_km <= @max_km").nsmallest(n, "dist_km")
 
 
-
-if __name__ == "__main__":
+def main():
     DATA.mkdir(exist_ok=True)
     iris, shake = get_inventory()
-    iris_tab = to_table(iris, source="iris")
-    shake_tab = to_table(shake, source="raspberry_shake")
+    iris_tab = to_table(iris, source="iris")  # source is labeling
+    shake_tab = to_table(shake, source="shake")
 
     merged_tab = pd.concat([iris_tab, shake_tab])
     merged_tab.to_parquet(DATA / "stations.parquet", index=False)
@@ -67,3 +67,7 @@ if __name__ == "__main__":
 
     #save as stationxml for future, using obspy inventory additive
     (iris + shake).write(str(DATA / "inventory.xml"), format="STATIONXML")
+
+
+if __name__ == "__main__":
+    main()
